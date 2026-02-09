@@ -61,6 +61,7 @@
   let currentCards = [...allCards];
   let currentIdx = 0;
   let isFlipped = false;
+  let cardDirection = localStorage.getItem('flashcardDirection') || 'kr-en';
 
   /* --- DOM --- */
   const flashcardEl = document.getElementById('flashcard');
@@ -101,9 +102,15 @@
       return;
     }
     const card = currentCards[currentIdx];
-    koreanEl.textContent = card.kr;
-    englishEl.textContent = card.en;
-    romEl.textContent = card.rom;
+    if (cardDirection === 'en-kr') {
+      koreanEl.textContent = card.en;
+      englishEl.textContent = card.kr;
+      romEl.textContent = card.rom;
+    } else {
+      koreanEl.textContent = card.kr;
+      englishEl.textContent = card.en;
+      romEl.textContent = card.rom;
+    }
     progressEl.textContent = (currentIdx + 1) + ' / ' + currentCards.length;
     innerEl.classList.toggle('flipped', isFlipped);
   }
@@ -122,6 +129,22 @@
       App.speak(currentCards[currentIdx].kr);
     }
   });
+
+  /* --- Direction toggle --- */
+  const dirBtn = document.getElementById('direction-btn');
+  function updateDirBtn() {
+    if (dirBtn) dirBtn.innerHTML = cardDirection === 'kr-en' ? 'EN &rarr; KR' : 'KR &rarr; EN';
+  }
+  updateDirBtn();
+  if (dirBtn) {
+    dirBtn.addEventListener('click', () => {
+      cardDirection = cardDirection === 'kr-en' ? 'en-kr' : 'kr-en';
+      localStorage.setItem('flashcardDirection', cardDirection);
+      isFlipped = false;
+      updateDirBtn();
+      render();
+    });
+  }
 
   /* --- Navigation --- */
   document.getElementById('prev-btn').addEventListener('click', () => {
