@@ -484,6 +484,61 @@
         ]
       },
       {
+        "name": "Common Expressions",
+        "cards": [
+          {
+            "kr": "진짜?",
+            "rom": "JIN-JJA?",
+            "en": "Really?"
+          },
+          {
+            "kr": "진짜요?",
+            "rom": "JIN-JJA-YO?",
+            "en": "Really? (polite)"
+          },
+          {
+            "kr": "한국어는 아직 어려워요",
+            "rom": "HAN-GUG-EO-NEUN A-JIK EO-RYEO-WO-YO",
+            "en": "Korean is still difficult"
+          },
+          {
+            "kr": "그럴 줄 알았다",
+            "rom": "GEU-REOL JUL AL-AT-DA",
+            "en": "I knew it"
+          },
+          {
+            "kr": "중간만 해요",
+            "rom": "JUNG-GAN-MAN HAE-YO",
+            "en": "Take it easy / Be moderate"
+          },
+          {
+            "kr": "맞아요",
+            "rom": "MAJ-A-YO",
+            "en": "That's right"
+          },
+          {
+            "kr": "그래요?",
+            "rom": "GEU-RAE-YO?",
+            "en": "Is that so?"
+          },
+          {
+            "kr": "잘 모르겠어요",
+            "rom": "JAL MO-REU-GESS-EO-YO",
+            "en": "I'm not sure"
+          },
+          {
+            "kr": "괜찮아요",
+            "rom": "GWAEN-CHAN-A-YO",
+            "en": "It's okay"
+          },
+          {
+            "kr": "알겠어요",
+            "rom": "AL-GESS-EO-YO",
+            "en": "I understand / Got it"
+          }
+        ]
+      },
+      {
         "name": "Numbers",
         "cards": [
           {
