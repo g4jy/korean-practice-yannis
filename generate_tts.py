@@ -52,6 +52,19 @@ def extract_all_texts(data):
     for adv in desc.get('adverbs', []):
         texts.add(adv['kr'])
 
+    # Flashcard extra vocabulary
+    fc = data.get('flashcards', {})
+    for cat in fc.get('categories', []):
+        for card in cat.get('cards', []):
+            texts.add(card['kr'])
+
+    # Intro data (for Clayton-style repos)
+    intro = data.get('intro', {})
+    for t in intro.get('topics', []):
+        texts.add(t['kr'])
+    for n in intro.get('nouns', []):
+        texts.add(n['kr'])
+
     return sorted(texts)
 
 
