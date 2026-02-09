@@ -37,10 +37,11 @@
   /* --- Filter objects compatible with current verb --- */
   function compatibleObjects() {
     const verb = currentVerb();
-    if (!verb.compatibleObjects || verb.compatibleObjects.length > 0) {
-      // New format: explicit compatible objects list
-      return objects.filter(o => verb.compatibleObjects && verb.compatibleObjects.includes(o.kr + App.particleEulReul(o.kr)));
+    // New format: explicit compatible objects list
+    if (verb.compatibleObjects && verb.compatibleObjects.length > 0) {
+      return objects.filter(o => verb.compatibleObjects.includes(o.kr + App.particleEulReul(o.kr)));
     }
+    // Legacy format: objectTypes category matching
     if (!verb.objectTypes || verb.objectTypes.length === 0) return [];
     return objects.filter(o => verb.objectTypes.includes(o.category));
   }
