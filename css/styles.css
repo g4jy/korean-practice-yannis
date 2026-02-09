@@ -254,6 +254,42 @@ body {
   letter-spacing: 0.5px;
 }
 
+/* --- Element Toggle Buttons (Action Builder) --- */
+.element-toggles {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.element-toggle {
+  background: var(--bg-card);
+  color: var(--text-light);
+  border: 2px solid var(--text-light);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.element-toggle:hover {
+  background: rgba(107, 114, 128, 0.1);
+}
+
+.element-toggle.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.element-toggle:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 /* --- Adverb Toggle --- */
 .adverb-toggle {
   text-align: center;

@@ -26,13 +26,50 @@ const App = (() => {
     }
   }
 
+  let currentSpeakAudio = null;
+
   function speak(text) {
+    // Stop any previous playback
+    if (currentSpeakAudio) { currentSpeakAudio.pause(); currentSpeakAudio = null; }
+    speechSynthesis.cancel();
+
+    // Exact match in manifest
     if (audioManifest && audioManifest[text]) {
       const audio = new Audio(audioBasePath + audioManifest[text]);
+      currentSpeakAudio = audio;
       audio.play().catch(() => speakWebAPI(text));
       return;
     }
+
+    // For sentences: try sequential word playback from manifest
+    if (audioManifest && text.includes(' ')) {
+      const words = text.split(/\s+/);
+      const audioWords = words.filter(w => audioManifest[w]);
+      // Use sequential playback if >50% of words have audio
+      if (audioWords.length > words.length * 0.5) {
+        speakSequential(words, 0);
+        return;
+      }
+    }
+
     speakWebAPI(text);
+  }
+
+  function speakSequential(words, idx) {
+    if (idx >= words.length) return;
+    const word = words[idx];
+    if (audioManifest && audioManifest[word]) {
+      const audio = new Audio(audioBasePath + audioManifest[word]);
+      currentSpeakAudio = audio;
+      audio.onended = () => speakSequential(words, idx + 1);
+      audio.play().catch(() => {
+        speakWebAPI(word);
+        setTimeout(() => speakSequential(words, idx + 1), 600);
+      });
+    } else {
+      speakWebAPI(word);
+      setTimeout(() => speakSequential(words, idx + 1), 600);
+    }
   }
 
   function speakWebAPI(text) {

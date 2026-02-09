@@ -9,7 +9,10 @@
     timeIdx: 0,
     placeIdx: 0,
     objectIdx: 0,
-    verbIdx: 0
+    verbIdx: 0,
+    showTime: false,
+    showPlace: false,
+    showObject: false
   };
 
   const blocks = {
@@ -20,8 +23,9 @@
     verb: document.getElementById('block-verb')
   };
 
-  /* --- Get current tense from time selection --- */
+  /* --- Get current tense from time selection (default present) --- */
   function currentTense() {
+    if (!state.showTime) return 'present';
     return times[state.timeIdx].tense || 'present';
   }
 
@@ -33,6 +37,10 @@
   /* --- Filter objects compatible with current verb --- */
   function compatibleObjects() {
     const verb = currentVerb();
+    if (!verb.compatibleObjects || verb.compatibleObjects.length > 0) {
+      // New format: explicit compatible objects list
+      return objects.filter(o => verb.compatibleObjects && verb.compatibleObjects.includes(o.kr + App.particleEulReul(o.kr)));
+    }
     if (!verb.objectTypes || verb.objectTypes.length === 0) return [];
     return objects.filter(o => verb.objectTypes.includes(o.category));
   }
@@ -40,7 +48,6 @@
   /* --- Get place particle based on verb --- */
   function placeParticle(place) {
     const verb = currentVerb();
-    // Movement verbs (가다, 오다) use 에, action verbs use 에서
     return verb.placeParticle === 'e' ? place.formE : place.formEseo;
   }
 
@@ -65,22 +72,33 @@
   /* --- Update all blocks --- */
   function update() {
     const subj = subjects[state.subjectIdx];
-    const time = times[state.timeIdx];
-    const place = places[state.placeIdx];
-    const verb = currentVerb();
     const conj = conjugatedVerb();
-    const compat = compatibleObjects();
 
     renderBlock(blocks.subject, subj.kr, subj.rom, subj.en);
-    renderBlock(blocks.time, time.kr, time.rom, time.en);
+    renderBlock(blocks.verb, conj.kr, conj.rom, conj.en);
 
-    // Place with appropriate particle
-    const pForm = placeParticle(place);
-    renderBlock(blocks.place, pForm.kr, pForm.rom, place.en);
+    // Time (optional)
+    if (state.showTime) {
+      const time = times[state.timeIdx];
+      renderBlock(blocks.time, time.kr, time.rom, time.en);
+      blocks.time.classList.remove('hidden');
+    } else {
+      blocks.time.classList.add('hidden');
+    }
 
-    // Object (hide if verb takes no object)
-    if (compat.length > 0) {
-      // Clamp object index
+    // Place (optional)
+    if (state.showPlace) {
+      const place = places[state.placeIdx];
+      const pForm = placeParticle(place);
+      renderBlock(blocks.place, pForm.kr, pForm.rom, place.en);
+      blocks.place.classList.remove('hidden');
+    } else {
+      blocks.place.classList.add('hidden');
+    }
+
+    // Object (optional, and depends on verb compatibility)
+    const compat = compatibleObjects();
+    if (state.showObject && compat.length > 0) {
       if (state.objectIdx >= compat.length) state.objectIdx = 0;
       const obj = compat[state.objectIdx];
       const particle = App.particleEulReul(obj.kr);
@@ -90,37 +108,71 @@
       blocks.object.classList.add('hidden');
     }
 
-    renderBlock(blocks.verb, conj.kr, conj.rom, conj.en);
-
     updateSentence();
+    updateToggleButtons();
   }
 
   /* --- Build and display full sentence --- */
   function updateSentence() {
     const subj = subjects[state.subjectIdx];
-    const time = times[state.timeIdx];
-    const place = places[state.placeIdx];
-    const pForm = placeParticle(place);
     const conj = conjugatedVerb();
     const verb = currentVerb();
     const compat = compatibleObjects();
 
-    let parts = [subj.kr, time.kr, pForm.kr];
-    let enParts = [];
+    let krParts = [subj.kr];
+    let enParts = [subj.en];
 
-    if (compat.length > 0) {
+    if (state.showTime) {
+      const time = times[state.timeIdx];
+      krParts.push(time.kr);
+      enParts.push(time.en + ',');
+    }
+
+    if (state.showPlace) {
+      const place = places[state.placeIdx];
+      const pForm = placeParticle(place);
+      krParts.push(pForm.kr);
+      const prep = verb.placeParticle === 'e' ? 'to' : 'at';
+      enParts.push(prep + ' ' + place.en + ',');
+    }
+
+    if (state.showObject && compat.length > 0) {
       const obj = compat[state.objectIdx] || compat[0];
       const particle = App.particleEulReul(obj.kr);
-      parts.push(obj.kr + particle);
-      enParts = [subj.en, time.en + ',', 'at ' + place.en + ',', conj.en, obj.en];
-    } else {
-      const prep = verb.placeParticle === 'e' ? 'to' : 'at';
-      enParts = [subj.en, time.en + ',', conj.en, prep + ' ' + place.en];
+      krParts.push(obj.kr + particle);
+      enParts.push(obj.en);
     }
-    parts.push(conj.kr);
 
-    document.getElementById('full-sentence').textContent = parts.join(' ');
+    krParts.push(conj.kr);
+    enParts.push(conj.en);
+
+    document.getElementById('full-sentence').textContent = krParts.join(' ');
     document.getElementById('translation').textContent = enParts.join(' ');
+  }
+
+  /* --- Toggle button state --- */
+  function updateToggleButtons() {
+    const btns = document.querySelectorAll('.element-toggle');
+    btns.forEach(btn => {
+      const el = btn.dataset.element;
+      const active = state['show' + el.charAt(0).toUpperCase() + el.slice(1)];
+      btn.classList.toggle('active', active);
+      const label = el.charAt(0).toUpperCase() + el.slice(1);
+
+      // Disable object toggle if verb has no compatible objects
+      if (el === 'object') {
+        const compat = compatibleObjects();
+        if (compat.length === 0) {
+          btn.disabled = true;
+          btn.classList.remove('active');
+          btn.innerHTML = (active ? '- ' : '+ ') + label + ' <small>(N/A)</small>';
+          return;
+        }
+        btn.disabled = false;
+      }
+
+      btn.textContent = (active ? '- ' : '+ ') + label;
+    });
   }
 
   /* --- Block click handlers --- */
@@ -170,6 +222,16 @@
   }
 
   Object.values(blocks).forEach(addTtsBtn);
+
+  /* --- Element toggle buttons --- */
+  document.querySelectorAll('.element-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const el = btn.dataset.element;
+      const key = 'show' + el.charAt(0).toUpperCase() + el.slice(1);
+      state[key] = !state[key];
+      update();
+    });
+  });
 
   /* --- Speak full sentence --- */
   document.getElementById('speak-btn').addEventListener('click', () => {

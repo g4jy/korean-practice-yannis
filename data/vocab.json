@@ -382,15 +382,6 @@
         "compatibleSubjects": [
           "activity"
         ]
-      },
-      {
-        "id": "busy",
-        "kr": "바빠요",
-        "rom": "BA-PPA-YO",
-        "en": "busy",
-        "compatibleSubjects": [
-          "activity"
-        ]
       }
     ],
     "adverbs": [

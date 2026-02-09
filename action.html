@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Action Sentences — Yannis</title>
+  <title>Action Sentences — STUDENT_NAME</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -13,7 +13,13 @@
       <h1>Action Sentences</h1>
     </header>
 
-    <p class="instruction">Tap each block to change the word. Build a Korean sentence!</p>
+    <p class="instruction">Start with Subject + Verb, then add elements!</p>
+
+    <div class="element-toggles">
+      <button class="element-toggle" data-element="time">+ Time</button>
+      <button class="element-toggle" data-element="place">+ Place</button>
+      <button class="element-toggle" data-element="object">+ Object</button>
+    </div>
 
     <div class="sentence-area" id="sentence-area">
       <div class="block-row">
@@ -22,17 +28,17 @@
           <span class="block-rom"></span>
           <span class="block-en"></span>
         </div>
-        <div class="block" id="block-time" data-slot="time">
+        <div class="block hidden" id="block-time" data-slot="time">
           <span class="block-kr"></span>
           <span class="block-rom"></span>
           <span class="block-en"></span>
         </div>
-        <div class="block" id="block-place" data-slot="place">
+        <div class="block hidden" id="block-place" data-slot="place">
           <span class="block-kr"></span>
           <span class="block-rom"></span>
           <span class="block-en"></span>
         </div>
-        <div class="block" id="block-object" data-slot="object">
+        <div class="block hidden" id="block-object" data-slot="object">
           <span class="block-kr"></span>
           <span class="block-rom"></span>
           <span class="block-en"></span>
@@ -53,14 +59,6 @@
 
     <div class="rom-toggle">
       <button class="btn-rom active" id="toggle-rom">Aa Hide Romanization</button>
-    </div>
-
-    <div class="slot-labels">
-      <span>Subject</span>
-      <span>Time</span>
-      <span>Place</span>
-      <span>Object</span>
-      <span>Verb</span>
     </div>
   </div>
 
