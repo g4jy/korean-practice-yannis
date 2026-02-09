@@ -128,7 +128,7 @@ const App = (() => {
   }
 
   /* --- Response Tracking --- */
-  const WEBHOOK_URL = ''; // Set after deploying Apps Script
+  const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbw3f0cxkufdZkrG6kABkMy9djKGIrJvQX1qqqcFMFgt89ZhNGRlFVElYFUohA3z-tqoew/exec';
   const STORAGE_KEY = 'koreanPracticeResponses';
   let studentName = '';
   let sessionId = Date.now().toString(36);
