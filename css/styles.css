@@ -745,6 +745,55 @@ body.hide-rom .card-romanization { display: none !important; }
 /* Quiz card on index page */
 .card-quiz .card-example { color: #E84393; }
 
+/* --- Response Tracking Buttons --- */
+.response-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.resp-btn {
+  flex: 1;
+  max-width: 120px;
+  padding: 12px 8px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 2px solid transparent;
+}
+
+.resp-know {
+  background: #00B894;
+  color: #fff;
+  border-color: #00B894;
+}
+
+.resp-know:hover { background: #00a381; }
+
+.resp-unsure {
+  background: #FDCB6E;
+  color: #2D3436;
+  border-color: #FDCB6E;
+}
+
+.resp-unsure:hover { background: #f0be4a; }
+
+.resp-dont-know {
+  background: #E17055;
+  color: #fff;
+  border-color: #E17055;
+}
+
+.resp-dont-know:hover { background: #d05a40; }
+
+.resp-btn.resp-used {
+  transform: scale(0.92);
+  opacity: 0.6;
+}
+
 /* --- Utilities --- */
 .hidden { display: none !important; }
 

@@ -127,6 +127,59 @@ const App = (() => {
     });
   }
 
+  /* --- Response Tracking --- */
+  const WEBHOOK_URL = ''; // Set after deploying Apps Script
+  const STORAGE_KEY = 'koreanPracticeResponses';
+  let studentName = '';
+  let sessionId = Date.now().toString(36);
+
+  function trackResponse(kr, en, status, category, source) {
+    if (!studentName && vocabData) studentName = vocabData.student || '';
+    const entry = {
+      timestamp: new Date().toISOString(),
+      student: studentName,
+      word_kr: kr,
+      word_en: en,
+      status: status,
+      category: category || '',
+      source: source || 'flashcard',
+      session_id: sessionId
+    };
+
+    // Always save to localStorage
+    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    stored.push(entry);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+
+    // Fire-and-forget to webhook if configured
+    if (WEBHOOK_URL) {
+      try {
+        fetch(WEBHOOK_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(entry)
+        }).catch(() => {});
+      } catch (e) {}
+    }
+  }
+
+  function getResponses() {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  }
+
+  function exportResponses() {
+    const data = getResponses();
+    if (data.length === 0) return;
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = (studentName || 'student') + '_responses_' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   /* --- Init --- */
   async function init() {
     if ('speechSynthesis' in window) {
@@ -134,6 +187,11 @@ const App = (() => {
     }
     await loadAudioManifest();
     initRomToggle();
+    // Pre-load student name
+    try {
+      const d = await loadVocab();
+      studentName = d.student || '';
+    } catch (e) {}
   }
 
   if (document.readyState === 'loading') {
@@ -148,6 +206,9 @@ const App = (() => {
     hasJongseong,
     particleIGa,
     particleEulReul,
-    pulseBlock
+    pulseBlock,
+    trackResponse,
+    getResponses,
+    exportResponses
   };
 })();

@@ -172,6 +172,37 @@
     render();
   });
 
+  /* --- Response Tracking Buttons --- */
+  const respContainer = document.getElementById('response-buttons');
+  if (respContainer) {
+    function handleResponse(status) {
+      if (currentCards.length === 0) return;
+      const card = currentCards[currentIdx];
+      App.trackResponse(card.kr, card.en, status, card.category, 'flashcard');
+
+      // Visual feedback
+      const btns = respContainer.querySelectorAll('.resp-btn');
+      btns.forEach(b => b.classList.add('resp-used'));
+      setTimeout(() => {
+        btns.forEach(b => b.classList.remove('resp-used'));
+        // Auto-advance to next card
+        currentIdx = (currentIdx + 1) % currentCards.length;
+        isFlipped = false;
+        render();
+      }, 400);
+    }
+
+    respContainer.querySelector('[data-resp="know"]').addEventListener('click', () => handleResponse('know'));
+    respContainer.querySelector('[data-resp="unsure"]').addEventListener('click', () => handleResponse('unsure'));
+    respContainer.querySelector('[data-resp="dont_know"]').addEventListener('click', () => handleResponse('dont_know'));
+  }
+
+  /* --- Export button --- */
+  const exportBtn = document.getElementById('export-btn');
+  if (exportBtn) {
+    exportBtn.addEventListener('click', () => App.exportResponses());
+  }
+
   /* --- Keyboard --- */
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') document.getElementById('prev-btn').click();
@@ -180,6 +211,12 @@
       e.preventDefault();
       isFlipped = !isFlipped;
       render();
+    }
+    // 1/2/3 for response buttons
+    if (respContainer) {
+      if (e.key === '1') respContainer.querySelector('[data-resp="know"]').click();
+      if (e.key === '2') respContainer.querySelector('[data-resp="unsure"]').click();
+      if (e.key === '3') respContainer.querySelector('[data-resp="dont_know"]').click();
     }
   });
 
