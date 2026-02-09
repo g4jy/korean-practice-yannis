@@ -57,11 +57,24 @@
     (cat.cards || []).forEach(c => addCard(c.kr, c.rom, c.en, cat.name));
   });
 
+  /* --- Sort cards by mastery (weak first) --- */
+  function masteryOrder(card) {
+    const mastery = App.getWordMastery();
+    const m = mastery[card.kr];
+    if (!m) return 2; // unrated in middle
+    if (m.status === 'dont_know') return 0;
+    if (m.status === 'unsure') return 1;
+    return 3; // know last
+  }
+
+  allCards.sort((a, b) => masteryOrder(a) - masteryOrder(b));
+
   /* --- State --- */
   let currentCards = [...allCards];
   let currentIdx = 0;
   let isFlipped = false;
   let cardDirection = localStorage.getItem('flashcardDirection') || 'kr-en';
+  let reviewMode = false;
 
   /* --- DOM --- */
   const flashcardEl = document.getElementById('flashcard');
@@ -71,6 +84,10 @@
   const romEl = document.getElementById('card-romanization');
   const progressEl = document.getElementById('progress');
   const ttsBtn = document.getElementById('card-tts');
+  const masteryStatsEl = document.getElementById('mastery-stats');
+  const reviewBanner = document.getElementById('review-banner');
+  const reviewWeakBtn = document.getElementById('review-weak-btn');
+  const reviewExitBtn = document.getElementById('review-exit-btn');
 
   /* --- Build category tabs --- */
   const tabContainer = document.getElementById('category-tabs');
@@ -82,6 +99,7 @@
     const count = cat === 'All' ? allCards.length : (categories.get(cat) || []).length;
     btn.textContent = cat + ' (' + count + ')';
     btn.addEventListener('click', () => {
+      exitReviewMode();
       currentCards = cat === 'All' ? [...allCards] : [...(categories.get(cat) || [])];
       currentIdx = 0;
       isFlipped = false;
@@ -92,13 +110,58 @@
     tabContainer.appendChild(btn);
   });
 
+  /* --- Mastery Stats --- */
+  function updateMasteryStats() {
+    const mastery = App.getWordMastery();
+    let know = 0, unsure = 0, dontKnow = 0;
+    for (const card of currentCards) {
+      const m = mastery[card.kr];
+      if (!m) continue;
+      if (m.status === 'know') know++;
+      else if (m.status === 'unsure') unsure++;
+      else if (m.status === 'dont_know') dontKnow++;
+    }
+    if (masteryStatsEl) {
+      masteryStatsEl.innerHTML =
+        '<span class="stat-know">&#10003;' + know + '</span>' +
+        '&nbsp;&nbsp;<span class="stat-unsure">?' + unsure + '</span>' +
+        '&nbsp;&nbsp;<span class="stat-dont-know">&#10007;' + dontKnow + '</span>';
+    }
+    // Update review weak button count
+    const weakCount = allCards.filter(c => {
+      const m = mastery[c.kr];
+      return m && (m.status === 'dont_know' || m.status === 'unsure');
+    }).length;
+    if (reviewWeakBtn) {
+      reviewWeakBtn.textContent = 'Review Weak (' + weakCount + ')';
+    }
+  }
+
+  /* --- Card Status Badge --- */
+  function updateCardBadge() {
+    // Remove existing badge
+    const existing = flashcardEl.querySelector('.card-badge');
+    if (existing) existing.remove();
+
+    if (currentCards.length === 0) return;
+    const card = currentCards[currentIdx];
+    const mastery = App.getWordMastery();
+    const m = mastery[card.kr];
+    if (!m) return;
+
+    const badge = document.createElement('div');
+    badge.className = 'card-badge ' + m.status.replace('_', '-');
+    flashcardEl.querySelector('.flashcard-front').appendChild(badge);
+  }
+
   /* --- Render current card --- */
   function render() {
     if (currentCards.length === 0) {
-      koreanEl.textContent = 'No cards';
+      koreanEl.textContent = reviewMode ? 'All clear!' : 'No cards';
       englishEl.textContent = '';
       romEl.textContent = '';
       progressEl.textContent = '0 / 0';
+      updateMasteryStats();
       return;
     }
     const card = currentCards[currentIdx];
@@ -113,6 +176,51 @@
     }
     progressEl.textContent = (currentIdx + 1) + ' / ' + currentCards.length;
     innerEl.classList.toggle('flipped', isFlipped);
+    updateCardBadge();
+    updateMasteryStats();
+  }
+
+  /* --- Review Weak Mode --- */
+  function enterReviewMode() {
+    const mastery = App.getWordMastery();
+    const weakCards = allCards.filter(c => {
+      const m = mastery[c.kr];
+      return m && (m.status === 'dont_know' || m.status === 'unsure');
+    });
+    if (weakCards.length === 0) {
+      koreanEl.textContent = 'All clear!';
+      englishEl.textContent = '';
+      romEl.textContent = '';
+      progressEl.textContent = '0 / 0';
+      return;
+    }
+    reviewMode = true;
+    currentCards = weakCards;
+    currentIdx = 0;
+    isFlipped = false;
+    if (reviewBanner) reviewBanner.classList.remove('hidden');
+    render();
+  }
+
+  function exitReviewMode() {
+    reviewMode = false;
+    if (reviewBanner) reviewBanner.classList.add('hidden');
+  }
+
+  if (reviewWeakBtn) {
+    reviewWeakBtn.addEventListener('click', enterReviewMode);
+  }
+  if (reviewExitBtn) {
+    reviewExitBtn.addEventListener('click', () => {
+      exitReviewMode();
+      currentCards = [...allCards];
+      currentIdx = 0;
+      isFlipped = false;
+      tabContainer.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+      const allTab = tabContainer.querySelector('.cat-tab');
+      if (allTab) allTab.classList.add('active');
+      render();
+    });
   }
 
   /* --- Flip on tap --- */
@@ -180,13 +288,24 @@
       const card = currentCards[currentIdx];
       App.trackResponse(card.kr, card.en, status, card.category, 'flashcard');
 
+      // Re-queue dont_know cards 5 positions later
+      if (status === 'dont_know') {
+        const reinsertIdx = Math.min(currentIdx + 6, currentCards.length);
+        currentCards.splice(reinsertIdx, 0, { ...card });
+      }
+
       // Visual feedback
       const btns = respContainer.querySelectorAll('.resp-btn');
       btns.forEach(b => b.classList.add('resp-used'));
       setTimeout(() => {
         btns.forEach(b => b.classList.remove('resp-used'));
         // Auto-advance to next card
-        currentIdx = (currentIdx + 1) % currentCards.length;
+        if (status !== 'dont_know') {
+          currentIdx = (currentIdx + 1) % currentCards.length;
+        } else {
+          // For dont_know, move past current (card was reinserted ahead)
+          currentIdx = (currentIdx + 1) % currentCards.length;
+        }
         isFlipped = false;
         render();
       }, 400);

@@ -127,9 +127,11 @@ const App = (() => {
     });
   }
 
-  /* --- Response Tracking --- */
+  /* --- Response Tracking (Batch Mode) --- */
   const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbw3f0cxkufdZkrG6kABkMy9djKGIrJvQX1qqqcFMFgt89ZhNGRlFVElYFUohA3z-tqoew/exec';
   const STORAGE_KEY = 'koreanPracticeResponses';
+  const PENDING_KEY = 'koreanPracticePending';
+  const MASTERY_KEY = 'koreanPracticeMastery';
   let studentName = '';
   let sessionId = Date.now().toString(36);
 
@@ -146,22 +148,75 @@ const App = (() => {
       session_id: sessionId
     };
 
-    // Always save to localStorage
+    // Save to full history
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     stored.push(entry);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
 
-    // Fire-and-forget to webhook if configured
-    if (WEBHOOK_URL) {
-      try {
-        fetch(WEBHOOK_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify(entry)
-        }).catch(() => {});
-      } catch (e) {}
+    // Add to pending batch queue
+    const pending = JSON.parse(localStorage.getItem(PENDING_KEY) || '[]');
+    pending.push(entry);
+    localStorage.setItem(PENDING_KEY, JSON.stringify(pending));
+
+    // Update mastery
+    updateMastery(kr, status);
+
+    // Flush if pending > 20
+    if (pending.length >= 20) flushBatch();
+  }
+
+  function flushBatch() {
+    const pending = JSON.parse(localStorage.getItem(PENDING_KEY) || '[]');
+    if (pending.length === 0) return;
+
+    // Try sendBeacon first (works during page unload)
+    if (navigator.sendBeacon) {
+      const sent = navigator.sendBeacon(WEBHOOK_URL, JSON.stringify(pending));
+      if (sent) {
+        localStorage.setItem(PENDING_KEY, '[]');
+        return;
+      }
     }
+
+    // Fallback to fetch
+    fetch(WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(pending)
+    }).then(() => {
+      localStorage.setItem(PENDING_KEY, '[]');
+    }).catch(() => { /* keep pending for retry */ });
+  }
+
+  // Auto-flush triggers
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') flushBatch();
+  });
+  window.addEventListener('beforeunload', () => flushBatch());
+  setInterval(flushBatch, 5 * 60 * 1000); // every 5 minutes
+
+  /* --- Mastery API --- */
+  function updateMastery(kr, status) {
+    const mastery = JSON.parse(localStorage.getItem(MASTERY_KEY) || '{}');
+    const prev = mastery[kr] || { status: null, count: 0, lastSeen: null };
+    mastery[kr] = {
+      status: status,
+      count: prev.count + 1,
+      lastSeen: new Date().toISOString()
+    };
+    localStorage.setItem(MASTERY_KEY, JSON.stringify(mastery));
+  }
+
+  function getWordMastery() {
+    return JSON.parse(localStorage.getItem(MASTERY_KEY) || '{}');
+  }
+
+  function getWeakWords() {
+    const mastery = getWordMastery();
+    return Object.keys(mastery).filter(kr =>
+      mastery[kr].status === 'dont_know' || mastery[kr].status === 'unsure'
+    );
   }
 
   function getResponses() {
@@ -209,6 +264,9 @@ const App = (() => {
     pulseBlock,
     trackResponse,
     getResponses,
-    exportResponses
+    exportResponses,
+    getWordMastery,
+    getWeakWords,
+    flushBatch
   };
 })();
