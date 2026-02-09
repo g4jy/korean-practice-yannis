@@ -96,8 +96,6 @@
     if (compat.length <= 1) return;
     state.subjectIdx = (state.subjectIdx + 1) % compat.length;
     App.pulseBlock(blocks.subject);
-    const subj = compat[state.subjectIdx];
-    App.speak(subj.kr);
     update();
   });
 
@@ -108,9 +106,6 @@
 
     state.adjectiveIdx = (state.adjectiveIdx + 1) % adjectives.length;
     App.pulseBlock(blocks.adjective);
-    const adj = adjectives[state.adjectiveIdx];
-    App.speak(adj.kr);
-
     // Keep current subject if still compatible, otherwise reset
     const newCompat = compatibleSubjects();
     if (prevSubj) {
@@ -126,10 +121,23 @@
     if (adverbs.length === 0) return;
     state.adverbIdx = (state.adverbIdx + 1) % adverbs.length;
     App.pulseBlock(blocks.adverb);
-    const adv = adverbs[state.adverbIdx];
-    App.speak(adv.kr);
     update();
   });
+
+  /* --- Add TTS buttons to blocks --- */
+  function addTtsBtn(blockEl) {
+    const btn = document.createElement('button');
+    btn.className = 'block-tts-btn';
+    btn.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="11,5 6,9 2,9 2,15 6,15 11,19"/><path d="M15.54 8.46a5 5 0 010 7.07" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linecap="round"/></svg>';
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const kr = blockEl.querySelector('.block-kr').textContent;
+      App.speak(kr);
+    });
+    blockEl.appendChild(btn);
+  }
+
+  Object.values(blocks).forEach(addTtsBtn);
 
   /* --- Adverb toggle --- */
   const toggleBtn = document.getElementById('toggle-adverb');

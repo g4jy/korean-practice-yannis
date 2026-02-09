@@ -454,6 +454,58 @@ body.hide-rom .card-romanization { display: none !important; }
 
 .fc-action-btn:hover { border-color: var(--primary-light); }
 
+/* --- Block TTS Button --- */
+.block {
+  position: relative;
+}
+
+.block-tts-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  border: 1.5px solid rgba(255,255,255,0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, transform 0.15s;
+  padding: 0;
+  z-index: 2;
+}
+
+.block-tts-btn:hover {
+  background: rgba(255,255,255,0.45);
+  transform: scale(1.15);
+}
+
+.block-tts-btn:active {
+  transform: scale(0.9);
+}
+
+.block-tts-btn svg {
+  width: 12px;
+  height: 12px;
+  fill: rgba(255,255,255,0.9);
+}
+
+/* Time block has dark text, adjust TTS button */
+.block[data-slot="time"] .block-tts-btn {
+  background: rgba(0,0,0,0.1);
+  border-color: rgba(0,0,0,0.2);
+}
+
+.block[data-slot="time"] .block-tts-btn:hover {
+  background: rgba(0,0,0,0.2);
+}
+
+.block[data-slot="time"] .block-tts-btn svg {
+  fill: rgba(0,0,0,0.6);
+}
+
 /* --- Utilities --- */
 .hidden { display: none !important; }
 

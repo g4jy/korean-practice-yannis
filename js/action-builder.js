@@ -127,24 +127,18 @@
   blocks.subject.addEventListener('click', () => {
     state.subjectIdx = (state.subjectIdx + 1) % subjects.length;
     App.pulseBlock(blocks.subject);
-    const subj = subjects[state.subjectIdx];
-    App.speak(subj.kr);
     update();
   });
 
   blocks.time.addEventListener('click', () => {
     state.timeIdx = (state.timeIdx + 1) % times.length;
     App.pulseBlock(blocks.time);
-    const time = times[state.timeIdx];
-    App.speak(time.kr);
     update();
   });
 
   blocks.place.addEventListener('click', () => {
     state.placeIdx = (state.placeIdx + 1) % places.length;
     App.pulseBlock(blocks.place);
-    const place = places[state.placeIdx];
-    App.speak(place.kr);
     update();
   });
 
@@ -153,18 +147,29 @@
     if (compat.length === 0) return;
     state.objectIdx = (state.objectIdx + 1) % compat.length;
     App.pulseBlock(blocks.object);
-    const obj = compat[state.objectIdx];
-    App.speak(obj.kr);
     update();
   });
 
   blocks.verb.addEventListener('click', () => {
     state.verbIdx = (state.verbIdx + 1) % verbs.length;
     App.pulseBlock(blocks.verb);
-    const conj = conjugatedVerb();
-    App.speak(conj.kr);
     update();
   });
+
+  /* --- Add TTS buttons to blocks --- */
+  function addTtsBtn(blockEl) {
+    const btn = document.createElement('button');
+    btn.className = 'block-tts-btn';
+    btn.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="11,5 6,9 2,9 2,15 6,15 11,19"/><path d="M15.54 8.46a5 5 0 010 7.07" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linecap="round"/></svg>';
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const kr = blockEl.querySelector('.block-kr').textContent;
+      App.speak(kr);
+    });
+    blockEl.appendChild(btn);
+  }
+
+  Object.values(blocks).forEach(addTtsBtn);
 
   /* --- Speak full sentence --- */
   document.getElementById('speak-btn').addEventListener('click', () => {
