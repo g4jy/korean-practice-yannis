@@ -585,5 +585,91 @@
         ]
       }
     ]
+  },
+  "quiz": {
+    "title": "Situation Quiz",
+    "description": "Choose the best Korean expression for each situation!",
+    "situations": [
+      {
+        "situation": "Your friend tells you they're getting married next month. You're really surprised!",
+        "correct": "진짜요?",
+        "correctRom": "JIN-JJA-YO?",
+        "correctEn": "Really? (polite)",
+        "explanation": "진짜요? is used to express polite surprise at unexpected news.",
+        "options": ["진짜요?", "맞아요", "괜찮아요", "알겠어요"]
+      },
+      {
+        "situation": "Someone asks if Korean is easy for you. You want to honestly say it's still hard.",
+        "correct": "한국어는 아직 어려워요",
+        "correctRom": "HAN-GUG-EO-NEUN A-JIK EO-RYEO-WO-YO",
+        "correctEn": "Korean is still difficult",
+        "explanation": "This expression honestly conveys that you're still learning and finding it challenging.",
+        "options": ["한국어는 아직 어려워요", "잘 모르겠어요", "괜찮아요", "중간만 해요"]
+      },
+      {
+        "situation": "You predicted it would rain today and it actually did. Your friend is shocked, but you say...",
+        "correct": "그럴 줄 알았다",
+        "correctRom": "GEU-REOL JUL AL-AT-DA",
+        "correctEn": "I knew it",
+        "explanation": "그럴 줄 알았다 means 'I knew it' — used when your prediction was correct.",
+        "options": ["그럴 줄 알았다", "그래요?", "맞아요", "진짜?"]
+      },
+      {
+        "situation": "Your friend has been studying for 12 hours straight without a break. You want to tell them to take it easy.",
+        "correct": "중간만 해요",
+        "correctRom": "JUNG-GAN-MAN HAE-YO",
+        "correctEn": "Take it easy / Be moderate",
+        "explanation": "중간만 해요 means 'be moderate' or 'take it easy' — used to advise someone not to overdo things.",
+        "options": ["중간만 해요", "괜찮아요", "알겠어요", "한국어는 아직 어려워요"]
+      },
+      {
+        "situation": "Your teacher says '서울 is the capital of Korea' and you want to confirm that it's correct.",
+        "correct": "맞아요",
+        "correctRom": "MAJ-A-YO",
+        "correctEn": "That's right",
+        "explanation": "맞아요 means 'that's right' — used to agree with a correct statement.",
+        "options": ["맞아요", "그래요?", "알겠어요", "진짜요?"]
+      },
+      {
+        "situation": "Someone tells you that Korean convenience stores are open 24 hours. You didn't know that and want to respond.",
+        "correct": "그래요?",
+        "correctRom": "GEU-RAE-YO?",
+        "correctEn": "Is that so?",
+        "explanation": "그래요? expresses mild surprise or interest in new information, like 'oh really? / is that so?'",
+        "options": ["그래요?", "맞아요", "괜찮아요", "잘 모르겠어요"]
+      },
+      {
+        "situation": "Your Korean friend asks you where a good restaurant is in your city. You're not sure about one.",
+        "correct": "잘 모르겠어요",
+        "correctRom": "JAL MO-REU-GESS-EO-YO",
+        "correctEn": "I'm not sure",
+        "explanation": "잘 모르겠어요 means 'I'm not sure / I don't really know' — a polite way to express uncertainty.",
+        "options": ["잘 모르겠어요", "괜찮아요", "그럴 줄 알았다", "중간만 해요"]
+      },
+      {
+        "situation": "Your friend accidentally spills water on your notebook and apologizes. You want to say it's no big deal.",
+        "correct": "괜찮아요",
+        "correctRom": "GWAEN-CHAN-A-YO",
+        "correctEn": "It's okay",
+        "explanation": "괜찮아요 means 'it's okay / it's fine' — used to reassure someone that there's no problem.",
+        "options": ["괜찮아요", "맞아요", "그래요?", "알겠어요"]
+      },
+      {
+        "situation": "Your teacher just explained a new grammar rule and you want to show that you understood it.",
+        "correct": "알겠어요",
+        "correctRom": "AL-GESS-EO-YO",
+        "correctEn": "I understand / Got it",
+        "explanation": "알겠어요 means 'I understand / got it' — used to show comprehension after receiving an explanation.",
+        "options": ["알겠어요", "맞아요", "잘 모르겠어요", "그럴 줄 알았다"]
+      },
+      {
+        "situation": "Your friend casually tells you they just saw a famous K-pop star at the cafe. You can't believe it!",
+        "correct": "진짜?",
+        "correctRom": "JIN-JJA?",
+        "correctEn": "Really?",
+        "explanation": "진짜? (casual) is used with friends to express surprise. Use 진짜요? in polite/formal situations.",
+        "options": ["진짜?", "진짜요?", "그래요?", "맞아요"]
+      }
+    ]
   }
 }
