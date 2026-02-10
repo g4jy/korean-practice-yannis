@@ -139,13 +139,14 @@
 
   Object.values(blocks).forEach(addTtsBtn);
 
-  /* --- Adverb toggle --- */
-  const toggleBtn = document.getElementById('toggle-adverb');
-  toggleBtn.addEventListener('click', () => {
-    state.showAdverb = !state.showAdverb;
-    toggleBtn.textContent = state.showAdverb ? '- Remove Adverb' : '+ Add Adverb';
-    toggleBtn.classList.toggle('active', state.showAdverb);
-    update();
+  /* --- Element toggle buttons (matches Action builder pattern) --- */
+  document.querySelectorAll('.element-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.showAdverb = !state.showAdverb;
+      btn.textContent = state.showAdverb ? '- Adverb' : '+ Adverb';
+      btn.classList.toggle('active', state.showAdverb);
+      update();
+    });
   });
 
   /* --- Speak full sentence --- */
