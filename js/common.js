@@ -127,6 +127,26 @@ const App = (() => {
     });
   }
 
+  /* --- English Toggle --- */
+  function initEnToggle() {
+    const btn = document.getElementById('toggle-en');
+    if (!btn) return;
+    const stored = localStorage.getItem('showEn');
+    if (stored === 'false') {
+      document.body.classList.add('hide-en');
+      btn.textContent = 'EN Show English';
+      btn.classList.remove('active');
+    } else {
+      btn.classList.add('active');
+    }
+    btn.addEventListener('click', () => {
+      const hidden = document.body.classList.toggle('hide-en');
+      btn.textContent = hidden ? 'EN Show English' : 'EN Hide English';
+      btn.classList.toggle('active', !hidden);
+      localStorage.setItem('showEn', !hidden);
+    });
+  }
+
   /* --- Response Tracking (Batch Mode) --- */
   const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbw3f0cxkufdZkrG6kABkMy9djKGIrJvQX1qqqcFMFgt89ZhNGRlFVElYFUohA3z-tqoew/exec';
   const STORAGE_KEY = 'koreanPracticeResponses';
@@ -242,6 +262,7 @@ const App = (() => {
     }
     await loadAudioManifest();
     initRomToggle();
+    initEnToggle();
     // Pre-load student name
     try {
       const d = await loadVocab();

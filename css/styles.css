@@ -332,6 +332,8 @@ body {
 
 body.hide-rom .block-rom { display: none !important; }
 body.hide-rom .card-romanization { display: none !important; }
+body.hide-en .block-en { display: none !important; }
+body.hide-en .card-english { display: none !important; }
 
 /* --- Flashcard Page --- */
 .category-tabs {
