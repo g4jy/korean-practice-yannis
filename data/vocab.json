@@ -167,6 +167,60 @@
         "rom": "GA-BANG",
         "en": "bag",
         "category": "general"
+      },
+      {
+        "kr": "식당",
+        "rom": "SIK-DANG",
+        "en": "restaurant",
+        "category": "general"
+      },
+      {
+        "kr": "편의점",
+        "rom": "PYEO-NUI-JEOM",
+        "en": "convenience store",
+        "category": "general"
+      },
+      {
+        "kr": "학원",
+        "rom": "HAK-WON",
+        "en": "academy / hagwon",
+        "category": "general"
+      },
+      {
+        "kr": "눈치",
+        "rom": "NUN-CHI",
+        "en": "social awareness / reading the room",
+        "category": "general"
+      },
+      {
+        "kr": "기계",
+        "rom": "GI-GYE",
+        "en": "machine",
+        "category": "general"
+      },
+      {
+        "kr": "똥",
+        "rom": "TTONG",
+        "en": "poop / sh*t (mild meme)",
+        "category": "general"
+      },
+      {
+        "kr": "한국말",
+        "rom": "HAN-GUK-MAL",
+        "en": "Korean language",
+        "category": "general"
+      },
+      {
+        "kr": "욕실",
+        "rom": "YOK-SIL",
+        "en": "bathroom",
+        "category": "general"
+      },
+      {
+        "kr": "수능",
+        "rom": "SU-NEUNG",
+        "en": "Korean College Entrance Exam (CSAT)",
+        "category": "general"
       }
     ],
     "verbs": [
@@ -283,6 +337,73 @@
         "future": "마실 거예요",
         "futureRom": "MA-SIL GGEO-YE-YO",
         "futureEn": "will drink"
+      },
+      {
+        "id": "mandulda",
+        "en": "make",
+        "objectTypes": [
+          "food"
+        ],
+        "placeParticle": "eseo",
+        "past": "만들었어요",
+        "pastRom": "MAN-DEU-REO-SSEO-YO",
+        "pastEn": "made",
+        "present": "만들어요",
+        "presentRom": "MAN-DEU-REO-YO",
+        "presentEn": "make",
+        "future": "만들 거예요",
+        "futureRom": "MAN-DEUL GGEO-YE-YO",
+        "futureEn": "will make"
+      },
+      {
+        "id": "sada",
+        "en": "buy",
+        "objectTypes": [
+          "food",
+          "drink"
+        ],
+        "placeParticle": "eseo",
+        "past": "샀어요",
+        "pastRom": "SA-SSEO-YO",
+        "pastEn": "bought",
+        "present": "사요",
+        "presentRom": "SA-YO",
+        "presentEn": "buy",
+        "future": "살 거예요",
+        "futureRom": "SAL GGEO-YE-YO",
+        "futureEn": "will buy"
+      },
+      {
+        "id": "gongbuhada",
+        "en": "study",
+        "objectTypes": [],
+        "placeParticle": "eseo",
+        "past": "공부했어요",
+        "pastRom": "GONG-BU-HAE-SSEO-YO",
+        "pastEn": "studied",
+        "present": "공부해요",
+        "presentRom": "GONG-BU-HAE-YO",
+        "presentEn": "study",
+        "future": "공부할 거예요",
+        "futureRom": "GONG-BU-HAL GGEO-YE-YO",
+        "futureEn": "will study"
+      },
+      {
+        "id": "masida",
+        "en": "drink",
+        "objectTypes": [
+          "drink"
+        ],
+        "placeParticle": "eseo",
+        "past": "마셨어요",
+        "pastRom": "MA-SYEO-SSEO-YO",
+        "pastEn": "drank",
+        "present": "마셔요",
+        "presentRom": "MA-SYEO-YO",
+        "presentEn": "drink",
+        "future": "마실 거예요",
+        "futureRom": "MA-SIL GGEO-YE-YO",
+        "futureEn": "will drink"
       }
     ]
   },
@@ -352,6 +473,60 @@
         "kr": "가방",
         "rom": "GA-BANG",
         "en": "Bag",
+        "category": "general"
+      },
+      {
+        "kr": "식당",
+        "rom": "SIK-DANG",
+        "en": "Restaurant",
+        "category": "general"
+      },
+      {
+        "kr": "편의점",
+        "rom": "PYEO-NUI-JEOM",
+        "en": "Convenience store",
+        "category": "general"
+      },
+      {
+        "kr": "학원",
+        "rom": "HAK-WON",
+        "en": "Academy / hagwon",
+        "category": "general"
+      },
+      {
+        "kr": "눈치",
+        "rom": "NUN-CHI",
+        "en": "Social awareness / reading the room",
+        "category": "general"
+      },
+      {
+        "kr": "기계",
+        "rom": "GI-GYE",
+        "en": "Machine",
+        "category": "general"
+      },
+      {
+        "kr": "똥",
+        "rom": "TTONG",
+        "en": "Poop / sh*t (mild meme)",
+        "category": "general"
+      },
+      {
+        "kr": "한국말",
+        "rom": "HAN-GUK-MAL",
+        "en": "Korean language",
+        "category": "general"
+      },
+      {
+        "kr": "욕실",
+        "rom": "YOK-SIL",
+        "en": "Bathroom",
+        "category": "general"
+      },
+      {
+        "kr": "수능",
+        "rom": "SU-NEUNG",
+        "en": "Korean college entrance exam (csat)",
         "category": "general"
       }
     ],
@@ -469,6 +644,16 @@
         "kr": "쉽다",
         "rom": "SWIP-DA",
         "en": "to be easy",
+        "compatibleSubjects": [
+          "food",
+          "drink"
+        ]
+      },
+      {
+        "id": "to_be_bothersome___can't_be_bothered",
+        "kr": "귀찮다",
+        "rom": "GWI-CHAN-TA",
+        "en": "to be bothersome / can't be bothered",
         "compatibleSubjects": [
           "food",
           "drink"
@@ -682,6 +867,11 @@
             "kr": "망하다",
             "rom": "MANG-HA-DA",
             "en": "to collapse, to be ruined, to fail"
+          },
+          {
+            "kr": "켜다",
+            "rom": "KYEO-DA",
+            "en": "to turn on / switch on"
           }
         ]
       },
@@ -727,6 +917,71 @@
             "kr": "이 가방은 가벼워요",
             "rom": "I GA-BANG-EUN GA-BYEO-WO-YO",
             "en": "This bag is light"
+          },
+          {
+            "kr": "어이가 없네",
+            "rom": "EO-I-GA EOM-NE",
+            "en": "I am speechless / This is absurd"
+          },
+          {
+            "kr": "눈치가 없네",
+            "rom": "NUN-CHI-GA EOM-NE",
+            "en": "Has no social awareness (self-reflective)"
+          },
+          {
+            "kr": "눈치가 없어요",
+            "rom": "NUN-CHI-GA EOP-SEO-YO",
+            "en": "Has no social awareness (polite)"
+          },
+          {
+            "kr": "그건 좀...",
+            "rom": "GEU-GEON JOM...",
+            "en": "That's a bit... (implied refusal, unfinished)"
+          },
+          {
+            "kr": "귀찮아요",
+            "rom": "GWI-CHA-NA-YO",
+            "en": "Can't be bothered / It's a hassle"
+          },
+          {
+            "kr": "어쩔 수 없지",
+            "rom": "EO-JJEOL SU EOP-JI",
+            "en": "It can't be helped / What can you do"
+          },
+          {
+            "kr": "어쩔 수 없어요",
+            "rom": "EO-JJEOL SU EOP-SEO-YO",
+            "en": "It can't be helped (polite)"
+          },
+          {
+            "kr": "똥 만드는 기계",
+            "rom": "TTONG MAN-DEU-NEUN GI-GYE",
+            "en": "sh*t-making machine (meme: useless output)"
+          },
+          {
+            "kr": "만들어요",
+            "rom": "MAN-DEU-REO-YO",
+            "en": "to make (present tense form)"
+          },
+          {
+            "kr": "만드는",
+            "rom": "MAN-DEU-NEUN",
+            "en": "making (verb modifier form)"
+          },
+          {
+            "kr": "없네",
+            "rom": "EOM-NE",
+            "en": "there is none (self-reflective/exclamatory)"
+          },
+          {
+            "kr": "샀어요",
+            "rom": "SA-SSEO-YO",
+            "en": "bought (past tense of 사다)"
+          },
+          {
+            "kr": "공부했어요",
+            "rom": "GONG-BU-HAE-SSEO-YO",
+            "en": "studied (past tense of 공부하다)"
           }
         ]
       }
